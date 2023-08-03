@@ -10,7 +10,7 @@ from PIL import Image
 import matplotlib.pyplot as plt
 
 # if you wanna iterate over multiple files and json, the default source folder name is this.
-DEFAULT_BASE_DIR: str = './resources'
+DEFAULT_BASE_DIR: str = 'resources\\Images_with_traffic_lights\\Test Images'
 
 # The label we wanna look for in the polygons json file
 TFL_LABEL = ['traffic light']
@@ -31,6 +31,12 @@ def find_tfl_lights(c_image: np.ndarray,
     :param kwargs: Whatever config you want to pass in here.
     :return: 4-tuple of x_red, y_red, x_green, y_green.
     """
+    preprocessed_image = preprocess_image(c_image)
+    red_coordinates = find_red_coordinates(preprocessed_image)
+    green_coordinates = find_green_coordinates(preprocessed_image)
+    
+
+
     ### WRITE YOUR CODE HERE ###
     ### USE HELPER FUNCTIONS ###
     return [500, 700, 900], [500, 550, 600], [600, 800], [400, 300]
@@ -117,6 +123,16 @@ def main(argv=None):
     elif args.image:
         test_find_tfl_lights(args.image)
     plt.show(block=True)
+
+
+def preprocess_image(c_image: np.ndarray) -> np.ndarray:
+    pass
+
+def find_red_coordinates(image: np.ndarray) -> Tuple[RED_X_COORDINATES, RED_Y_COORDINATES]:
+    pass
+
+def find_green_coordinates(image: np.ndarray) -> Tuple[GREEN_X_COORDINATES, GREEN_Y_COORDINATES]:
+    pass
 
 
 if __name__ == '__main__':
