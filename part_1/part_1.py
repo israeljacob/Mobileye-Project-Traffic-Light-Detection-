@@ -35,7 +35,7 @@ def find_tfl_lights(c_image: np.ndarray,
     """
 
     preprocessed_image = preprocess_image(c_image)
-    show_and_save_convolution(c_image, preprocessed_image, kwargs['image_name'])
+    show_convolution(c_image, preprocessed_image, kwargs['image_name'])
     red_coordinates = find_red_coordinates(preprocessed_image)
     green_coordinates = find_green_coordinates(preprocessed_image)
     
@@ -153,11 +153,10 @@ def find_red_coordinates(image: np.ndarray) -> Tuple[RED_X_COORDINATES, RED_Y_CO
 def find_green_coordinates(image: np.ndarray) -> Tuple[GREEN_X_COORDINATES, GREEN_Y_COORDINATES]:
     pass
 
-def show_and_save_convolution(original_image: np.ndarray, convoluted_image: np.ndarray, fig_name: str):
+def show_convolution(original_image: np.ndarray, convoluted_image: np.ndarray, fig_name: str):
 
     plt.subplot(1, 2, 1)
-    new = original_image[:, :, 1]
-    plt.imshow(new)
+    plt.imshow(original_image)
 
     plt.title("Normal Image")
     plt.axis('off')
@@ -169,9 +168,11 @@ def show_and_save_convolution(original_image: np.ndarray, convoluted_image: np.n
     plt.axis('off')
 
     plt.show()
-
     new_file_name = DEFAULT_TEST_RESULT_FOLDER + os.path.basename(fig_name)[:-4] + '_convolution.png'
     plt.savefig(new_file_name)
+
+
+
 
 
 if __name__ == '__main__':
