@@ -14,6 +14,7 @@ from consts import IMAG_PATH, JSON_PATH, NAME, SEQ_IMAG, X, Y, COLOR, RED, GRN, 
 from misc_goodies import show_image_and_gt
 from data_utils import get_images_metadata
 from crops_creator import create_crops
+import processing_functions
 
 import tqdm  # for the progress bar
 import pandas as pd
@@ -35,6 +36,8 @@ def find_tfl_lights(c_image: np.ndarray, **kwargs) -> Dict[str, Any]:
     :return: Dictionary with at least the following keys: 'x', 'y', 'col', each containing a list (same lengths).
     # Note there are no explicit strings in the code-base. ALWAYS USE A CONSTANT VARIABLE INSTEAD!.
     """
+    D1_image = processing_functions.preprocess_image(c_image)
+    values = processing_functions.max_suppression(D1_image)
 
     # Okay... Here's an example of what this function should return. You will write your own of course
     x_red: List[float] = (np.arange(-100, 100, 20) + c_image.shape[1] / 2).tolist()
