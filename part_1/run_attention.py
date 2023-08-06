@@ -36,8 +36,9 @@ def find_tfl_lights(c_image: np.ndarray, **kwargs) -> Dict[str, Any]:
     :return: Dictionary with at least the following keys: 'x', 'y', 'col', each containing a list (same lengths).
     # Note there are no explicit strings in the code-base. ALWAYS USE A CONSTANT VARIABLE INSTEAD!.
     """
-    D1_image = processing_functions.preprocess_image(c_image)
-    values = processing_functions.max_suppression(D1_image)
+    green_image = processing_functions.find_green_coordinates(c_image)
+    red_image = processing_functions.find_green_coordinates(c_image)
+    #values = processing_functions.max_suppression(D1_image)
 
     # Okay... Here's an example of what this function should return. You will write your own of course
     x_red: List[float] = (np.arange(-100, 100, 20) + c_image.shape[1] / 2).tolist()
@@ -106,8 +107,9 @@ def test_find_tfl_lights(row: Series, args: Namespace) -> DataFrame:
         useless_image: np.ndarray = np.std(image, axis=2)  # No. You don't want this line in your code-base
         highpass_kernel_from_lecture: np.ndarray = np.array([[0, 0, 0], [0, 1, 0], [0, 0, 0]]) - 1 / 9
         hp_result: np.ndarray = sg.convolve(useless_image, highpass_kernel_from_lecture, 'same')
-        plt.subplot(212, sharex=ax, sharey=ax)
-        plt.imshow(hp_result)
+        #plt.subplot(212, sharex=ax, sharey=ax)
+        #plt.imshow(hp_result)
+        plt.scatter(attention_dict['y'], attention_dict['x'], s=20, color='green', marker='x')
         plt.title('Some useless image for you')
         plt.suptitle("When you zoom on one, the other zooms too :-)")
 

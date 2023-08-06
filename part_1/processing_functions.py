@@ -1,4 +1,5 @@
 import os.path
+import consts
 from typing import List, Optional, Union, Dict, Tuple
 import json
 import argparse
@@ -18,19 +19,7 @@ GREEN_Y_COORDINATES = List[int]
 
 
 def preprocess_image(c_image: np.ndarray) -> np.ndarray:
-    #blurred_image = gaussian_blur(c_image)
-    #blured_image_uint8 = np.uint8(blurred_image)
-
-    r_image = c_image[:, :, 0]
-    g_image = c_image[:, :, 1]
-    b_image = c_image[:, :, 2]
-    new_image = g_image + b_image/2 - r_image
-    plt.imshow(new_image)
-    plt.show()
-
-
-
-    return new_image
+   pass
 
 
 def gaussian_kernel_3d(kernel_size, sigma):
@@ -47,13 +36,28 @@ def gaussian_blur(image: np.ndarray) -> np.ndarray:
     return blurred_image
 
 
-def find_red_coordinates(image: np.ndarray) -> Tuple[RED_X_COORDINATES, RED_Y_COORDINATES]:
-    pass
+def find_red_coordinates(c_image: np.ndarray) -> np.ndarray:
+    r_image = c_image[:, :, 0]
+    g_image = c_image[:, :, 1]
+    b_image = c_image[:, :, 2]
+    new_image = g_image + b_image / 2 - r_image
+    kernel = np.array([[1 / 9, 1 / 9, 1 / 9], [1 / 9, 1 / 9, 1 / 9], [1 / 9, 1 / 9, 1 / 9]])
+    new_image = sg.convolve(new_image, kernel, mode='same', method='direct')
+
+    return new_image
 
 
-def find_green_coordinates(image: np.ndarray) -> Tuple[GREEN_X_COORDINATES, GREEN_Y_COORDINATES]:
-    pass
+def find_green_coordinates(c_image: np.ndarray) -> np.ndarray:
 
+    r_image = c_image[:, :, 0]
+    g_image = c_image[:, :, 1]
+    b_image = c_image[:, :, 2]
+
+    new_image = r_image - g_image / 3 - b_image / 3
+    kernel = np.array([[1 / 9, 1 / 9, 1 / 9], [1 / 9, 1 / 9, 1 / 9], [1 / 9, 1 / 9, 1 / 9]])
+    new_image = sg.convolve(new_image, kernel, mode='same', method='direct')
+
+    return new_image
 
 def find_traffic_light_kernel() -> np.ndarray:
     kernel = Image.open("green_light_2.png")
@@ -61,14 +65,16 @@ def find_traffic_light_kernel() -> np.ndarray:
 
     return numpy_kernel
 
+
 def max_suppression(image: np.ndarray, kernel_size: int = 21) -> np.ndarray:
     max_image = maximum_filter(image, size=kernel_size, mode='constant')
-    max_image = np.uint8(max_image)
-    plt.imshow(max_image)
+    # plt.imshow(max_image)
     values = compare_max_supression(image, max_image)
     return values
 
-def compare_max_supression(image: np.ndarray, max_image: np.ndarray) -> Tuple[RED_X_COORDINATES, RED_Y_COORDINATES, GREEN_X_COORDINATES, GREEN_Y_COORDINATES]:
+
+def compare_max_supression(image: np.ndarray, max_image: np.ndarray) -> Tuple[
+    RED_X_COORDINATES, RED_Y_COORDINATES, GREEN_X_COORDINATES, GREEN_Y_COORDINATES]:
     # return pixels that have same value in both images
     red_x_coordinates = []
     red_y_coordinates = []
